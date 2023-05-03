@@ -1,0 +1,20 @@
+.risk-cell-container span{
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+}
+
+.high span{
+    background-color: red;
+}
+
+.mid span{
+    background-color: orange;
+}
+
+.good span{
+    background-color: green;
+}

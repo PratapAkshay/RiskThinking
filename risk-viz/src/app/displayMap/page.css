@@ -1,0 +1,30 @@
+.year-filter-container{
+    position: absolute;
+    z-index: 1;
+    top: 10px;
+    border-radius: 16px;
+    right: 10px;
+    padding: 10px;
+    background: rgba(23, 28, 36, 0.43);
+}
+ 
+.year-filter-container button{
+    padding: 10px 20px;
+    border: 1px solid black;
+    border-radius: 16px;
+    margin: 8px;
+}
+
+.year-filter-container button:hover{
+    background: rgba(6, 34, 78, 0.43);
+}
+
+.year-filter-header{
+    margin: 3px 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.selected-year{
+    background-color: rgba(30, 43, 64, 0.43) !important;
+}

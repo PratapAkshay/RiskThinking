@@ -16,12 +16,74 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.year-filter-container{
+  grid-column-end: span 2;
+  border-radius: 16px;
+  padding: 10px;
+  background: rgba(23, 28, 36, 0.43);
+}
+
+.year-filter-container button{
+  padding: 10px 20px;
+  border: 1px solid black;
+  border-radius: 16px;
+  margin: 8px;
+}
+
+.year-filter-container button:hover{
+  background: rgba(6, 34, 78, 0.43);
+}
+
+.selected-year{
+  background-color: rgba(30, 43, 64, 0.43) !important;
+}
+
+.page-container{
+  display: grid;
+  grid-template-columns: auto auto;
+  height: 100vh;
+  grid-gap: 10px;
+}
+
+.page-container #chartdiv, #table-container{
+  height: 50vh;
+}
+
+#graph-container{
+  height: 50vh;
+  grid-column-end: span 2;
+}
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 118%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

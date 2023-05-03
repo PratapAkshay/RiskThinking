@@ -5,6 +5,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 First, run the development server:
 
 ```bash
+create env variable NEXT_PUBLIC_MAP_TOKEN to store mapbox API token 
+
 npm run dev
 # or
 yarn dev

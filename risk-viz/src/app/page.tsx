@@ -21,14 +21,7 @@ export default function Home() : JSX.Element {
   const [selectedAssetName, setSelectedAssetName] = useState<string[]>([distinctAssetName[0]]);
   const [selectedBusinessCategory, setBusinessCategory] = useState([distinctBusinessCategory[0]]);
   
-  const [columnDefs, setColumnDefs] = useState([
-    {headerName: "Asset Name", field: "Asset Name"},
-    {headerName: "Risk Rating", field: "Risk Rating", cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>},
-    {headerName: "Latttude", field: "Lat", filter: false},
-    {headerName: "Longitude", field: "Long", filter: false},
-    {headerName: "Business Category", field: "Business Category"},
-    {headerName: "Year", field: "Year"},
-  ]);
+  const [columnDefs, setColumnDefs] = useState<any[]>([]);
 
   const commonStateChangeHandler = useCallback(() => {
     let RiskFactor: {[key: string]: any} = {};
@@ -81,10 +74,14 @@ export default function Home() : JSX.Element {
 
   useEffect(() => {
     let [RiskFactor] = commonStateChangeHandler();
-    setColumnDefs( prev => {
-      let update = Object.keys(RiskFactor).map( risk => ({headerName: risk, field: risk, cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>}));
-      return [ ...prev,...update];
-    })
+    let constantDef = [{headerName: "Asset Name", field: "Asset Name"},
+    {headerName: "Risk Rating", field: "Risk Rating", cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>},
+    {headerName: "Latttude", field: "Lat", filter: false},
+    {headerName: "Longitude", field: "Long", filter: false},
+    {headerName: "Business Category", field: "Business Category"},
+    {headerName: "Year", field: "Year"}]
+    let update = Object.keys(RiskFactor).map( risk => ({headerName: risk, field: risk, cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>}));
+    setColumnDefs([...constantDef, ...update])
   },[commonStateChangeHandler]);
 
   useEffect(() => {

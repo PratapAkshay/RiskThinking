@@ -11,7 +11,6 @@ const ClusterMarker = ({pointsLength, markerCount, latitude, longitude, onClick}
         onClick={onClick}
         key={markerId}
         latitude={latitude}
-        onDrag={() => console.log("clossser")}
         longitude={longitude}
     >
         <div 

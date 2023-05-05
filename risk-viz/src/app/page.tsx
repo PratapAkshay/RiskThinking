@@ -1,7 +1,7 @@
 'use client';
 import { Inter } from 'next/font/google'
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import DisplayGraph from './displayGraph';
 import data from "../assets/data/dataSet.json";
 import DataTable from '@/components/DataTable';
@@ -23,14 +23,14 @@ export default function Home() : JSX.Element {
   
   const [columnDefs, setColumnDefs] = useState([
     {headerName: "Asset Name", field: "Asset Name"},
-    {headerName: "Risk Rating", field: "Risk Rating", cellRendererFramework:(parms) => <RiskCell value={parms.value}/>},
+    {headerName: "Risk Rating", field: "Risk Rating", cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>},
     {headerName: "Latttude", field: "Lat", filter: false},
     {headerName: "Longitude", field: "Long", filter: false},
     {headerName: "Business Category", field: "Business Category"},
     {headerName: "Year", field: "Year"},
   ]);
 
-  const commonStateChangeHandler = () => {
+  const commonStateChangeHandler = useCallback(() => {
     let RiskFactor: {[key: string]: any} = {};
     let AssetName: {[key: string]: any} = {};
     let BusinessCategory: {[key: string]: any} = {};
@@ -62,7 +62,7 @@ export default function Home() : JSX.Element {
     setSelectedAssetName([Object.keys(AssetName)[0]]);
     setBusinessCategory([Object.keys(BusinessCategory)[0]]);
     return [RiskFactor,AssetName,BusinessCategory];
-  }
+  },[JsonData, year]);
 
   useEffect(() => {
     if(selectedRow){
@@ -77,22 +77,22 @@ export default function Home() : JSX.Element {
       });
       setChartData(obj);
     }
-  },[selectedRow]);
+  },[distinctRiskFactor, selectedRow]);
 
   useEffect(() => {
     let [RiskFactor] = commonStateChangeHandler();
     setColumnDefs( prev => {
-      let update = Object.keys(RiskFactor).map( risk => ({headerName: risk, field: risk, cellRendererFramework:(parms) => <RiskCell value={parms.value}/>}));
+      let update = Object.keys(RiskFactor).map( risk => ({headerName: risk, field: risk, cellRendererFramework:(parms: { value: number; }) => <RiskCell value={parms.value}/>}));
       return [ ...prev,...update];
     })
-  },[]);
+  },[commonStateChangeHandler]);
 
   useEffect(() => {
     setSelectedRow(null);
     if(detailedData.length){
       commonStateChangeHandler();
     }
-  },[year]);
+  },[year, commonStateChangeHandler, detailedData.length]);
 
   return (
     <div className='page-container'>

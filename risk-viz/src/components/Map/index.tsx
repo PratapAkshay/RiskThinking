@@ -46,7 +46,7 @@ const MapContainer = (props: React.PropsWithChildren<Tprops> ) : JSX.Element => 
             latitude: viewport.latitude, 
             longitude: viewport.longitude
         });
-    },[viewport])
+    },[viewport, props])
 
     const { clusters, supercluster } = useSupercluster({
         points: cluterPoints,
@@ -80,7 +80,7 @@ const MapContainer = (props: React.PropsWithChildren<Tprops> ) : JSX.Element => 
             const {
                 cluster : isCluster,
                 point_count : pointCount
-            } = cluster.properties;
+            } = cluster.properties as any;
 
             return isCluster ?
             <ClusterMarker pointsLength={cluterPoints.length} onClick={() => onClickClusterMarker(Number(cluster.id),longitude, latitude)} latitude={latitude} longitude={longitude} markerCount={pointCount} /> :

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
@@ -6,20 +6,7 @@ const DisplayGraph = ({selectedRow, year, assetName, data, businessCategory}: {s
     
     const ref = useRef<am4charts.XYChart | null>(null);
 
-    useEffect(() => {
-        am4core.useTheme(am4themes_animated);
-        if(year != 'Null'){
-            createNewChart(data);
-        }else{
-            createChart(data);
-        }
-
-        return () => {
-            if(ref.current) ref.current.dispose();
-        }
-    },[year, data,assetName,businessCategory]);
-
-    const createNewChart = (filterData: any[]) => {
+    const createNewChart = useCallback((filterData: any[]) => {
         if(ref.current) ref.current.dispose();
         ref.current = am4core.create("chartdiv", am4charts.XYChart);
         ref.current.data = filterData;
@@ -38,30 +25,37 @@ const DisplayGraph = ({selectedRow, year, assetName, data, businessCategory}: {s
         series.dataFields.categoryX = "category";
         if(!selectedRow)
             series.columns.template.adapter.add("fill", (fill, target) => {
-                if(target.dataItem.dataContext.category === "High Risk"){
-                    return '#f00'
-                }else if(target.dataItem.dataContext.category === "Medium Risk"){
-                    return '#ffa500'
+                if(target.dataItem){
+                    const context = target.dataItem.dataContext as any;
+                    if(context.category === "High Risk"){
+                        return am4core.color('#f00');
+                    }else if(context.category === "Medium Risk"){
+                        return am4core.color('#ffa500');
+                    }
                 }
-                return '#008000';
+                return am4core.color('#008000');
             });
         else
             series.columns.template.adapter.add("fill", (fill, target) => {
-                if(target.dataItem.dataContext.value >= 0.6 ){
-                    return '#f00'
-                }else if(target.dataItem.dataContext.value >= 0.3){
-                    return '#ffa500'
+
+                if(target.dataItem){
+                    const context = target.dataItem.dataContext as any;
+                    if(context.value >= 0.6){
+                        return am4core.color('#f00');
+                    }else if(context.value >= 0.3){
+                        return am4core.color('#ffa500');
+                    }
                 }
-                return '#008000';
+                return am4core.color('#008000');
             });
 
         var bullet = series.bullets.push(new am4charts.LabelBullet());
         bullet.label.text = "{valueY}";
 
         ref.current.maskBullets = false;
-    }
+    },[selectedRow]);
 
-    const createChart = (filterData: any[]) => {
+    const createChart = useCallback((filterData: any[]) => {
         if(ref.current) ref.current.dispose();
         ref.current = am4core.create("chartdiv", am4charts.XYChart); 
         ref.current.data = filterData;
@@ -86,7 +80,20 @@ const DisplayGraph = ({selectedRow, year, assetName, data, businessCategory}: {s
         series.tooltipText = "Year :  [bold]{categoryX}[/]\n Risk Rate: [bold]{valueY}[/]";
 
         ref.current.cursor = new am4charts.XYCursor();
-    }
+    },[]);
+
+    useEffect(() => {
+        am4core.useTheme(am4themes_animated);
+        if(year != 'Null'){
+            createNewChart(data);
+        }else{
+            createChart(data);
+        }
+
+        return () => {
+            if(ref.current) ref.current.dispose();
+        }
+    },[createNewChart,createChart, year, data,assetName,businessCategory]);
 
     return <div id="chartdiv"></div>
 }
